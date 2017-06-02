@@ -1,0 +1,107 @@
+1,
+Model 对象没有属性 insert
+
+    源头, 第1步：
+    user.insert() # user is-a User, User is-a Model
+
+    # Model has 
+
+
+
+    ？？key = 'insert' 的源头？
+        在哪里调用了 __getattr__??
+        答：调用不存在的属性时，会自动调用 __getattr__ 去寻找属性。
+
+        那么 self 里面有什么东西吗？ self[key] 里面为什么没有 ‘insert’ ？
+        答：self 里面有方法： __len__ = 2, 属性 id = 123, name = ‘Yud’
+        找 metaclass
+
+    末尾，第 n 步：
+    __getattr__(self, 'insert'):
+        try:
+            return self['insert']
+
+2，学习 sqlite3
+
+3，学习 MySQL
+
+    在Windows上，安装时请选择UTF-8编码，以便正确地处理中文。
+        检查 MySQL 编码：
+        mysql> show variables like '%char%';
+
+    安装 mysql_connector
+
+        出现问题：
+
+        Unable to find Protobuf include directory.
+        找不到，那么我应该先把 mysql 安装好，再安装这个。
+
+        “曲线救国” - 解决方案：
+            py 3 使用另外一个模块：pymysql。
+
+    转而使用 pymysql 模块
+        练习参见一：（http://www.runoob.com/python3/python3-mysql.html）
+        参考二：（https://github.com/PyMySQL/PyMySQL/blob/master/README.rst）
+
+    疑问1：
+        1，主键，只能够在建立表的时候定义吗。
+        如果在建立表的时候没有定义，那么这时候主键是什么？
+
+4，学习 global
+
+    http://www.runoob.com/python/python-modules.html
+
+    如，一个 .py 文件中：
+    Money = 2000
+    def add_money():
+        Money += 1
+
+    print Money
+    add_money()
+
+5, 学习 with
+
+    参考：
+    http://python.usyiyi.cn/translate/python_352/reference/compound_stmts.html#the-with-statement
+    http://python.usyiyi.cn/translate/python_352/reference/datamodel.html#context-managers
+    http://python.usyiyi.cn/translate/python_352/library/stdtypes.html#typecontextmanager
+
+    · with 语句形如：
+        with with_item : suite
+        with with_item, with_item : suite （也可以多个）
+        with with_item as target : suite （添加 as 语句）
+
+    · with_item 是一个上下文表达式。
+
+    · with语句 在执行的时候有如下操作：
+        1，计算 with_item 得到上下文管理器。
+        2，加载上下文管理器的 __exit__() 方法供以后使用。
+        3，调用上下文管理器的 __enter__() 方法。
+        4，如果有 as target 部分的情况，target 被分配 __enter__() 的返回值。
+        5，suite 部分代码块被执行。（suite 套件）
+        6，调用上下文管理器的 __exit__() 方法。
+            （__exit__() 有三个参数）
+            如果有异常导致 suite 退出，那么异常的类型，值和跟踪（traceback）会作为
+            参数传递给 __exit__()。
+            否则，会传递三个 None 参数。
+
+            由于异常退出的情况下，
+                且__exit__()方法的返回值为假，异常将被重新引发。
+                如果返回值为真，异常将被取消，并继续执行with语句之后的语句。
+
+            如果语句组由于异常以外的其它任何原因退出，__exit__()的返回值将被忽略，
+            执行将在退出发生的正常位置继续。
+
+    · 多个 with_item
+        with A() as a, B() as b:
+            suite
+        # 相当于
+        with A() as a:
+            with B() as b:
+                suite
+
+    · with 上下文管理器
+
+        它是一个对象，可以被 with 语句调用，也可以通过直接调用的方法调用。
+
+        用途：保存和恢复各种全局状态，锁定和解锁资源，关闭打开文件等。
